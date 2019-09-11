@@ -1,3 +1,2 @@
-endpoint: http://localhost:4466/review/default
+endpoint: http://localhost:4466/
 datamodel: datamodel.prisma
-test: test

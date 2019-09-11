@@ -4,21 +4,23 @@ const prisma = new Prisma({
   endpoint: 'http://localhost:4466'
 })
 
-const createPostForUser = async (authorId, data) => {
-  const userExists = await prisma.exists.User({ id: authorId })
-  if (!userExists) {
-    throw new Error('User not fond')
-  }
-  const post = await prisma.mutation.createPost({
-    data: {
-      ...data,
-      author: { connect: { id: authorId } }
-    }
-  },
-    '{ id name email posts{ id title published } }'
-  )
-  return post.author
-}
+export { prisma as default }
+
+// const createPostForUser = async (authorId, data) => {
+//   const userExists = await prisma.exists.User({ id: authorId })
+//   if (!userExists) {
+//     throw new Error('User not fond')
+//   }
+//   const post = await prisma.mutation.createPost({
+//     data: {
+//       ...data,
+//       author: { connect: { id: authorId } }
+//     }
+//   },
+//     '{ id name email posts{ id title published } }'
+//   )
+//   return post.author
+// }
 
 // createPostForUser('ck0brkok300ba0706co579ei2', {
 //   title: 'Great Books to read part 2',
@@ -30,21 +32,21 @@ const createPostForUser = async (authorId, data) => {
 // console.log(error.message);
 // })
 
-const updatePostForUser = async (postId, data) => {
-  const postExists = await prisma.exists.Post({ id: postId })
-  if (!postExists) {
-    throw new Error('Post not fond')
-  }
-  const post = await prisma.mutation.updatePost({
-    where: {
-      id: postId
-    },
-    data: {
-      ...data,
-    }
-  }, '{ author { id name email posts{ id title published } } }')
-  return post.author
-}
+// const updatePostForUser = async (postId, data) => {
+//   const postExists = await prisma.exists.Post({ id: postId })
+//   if (!postExists) {
+//     throw new Error('Post not fond')
+//   }
+//   const post = await prisma.mutation.updatePost({
+//     where: {
+//       id: postId
+//     },
+//     data: {
+//       ...data,
+//     }
+//   }, '{ author { id name email posts{ id title published } } }')
+//   return post.author
+// }
 
 // updatePostForUser('ck0d1kvov0ene0706l5dbmd32', {
 //   published: false
