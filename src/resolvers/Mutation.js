@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 
 const Mutation = {
-  createUser(parent, args, { prisma }, info) {
+  async createUser(parent, args, { prisma }, info) {
     // const emailTaken = await prisma.exists.User({ email: args.data.email })
     // if (emailTaken) {
     //   throw new Error('Email taken')
@@ -11,7 +11,7 @@ const Mutation = {
     }
     const password = await bcrypt.hash(args.data.password, 10)
 
-    return prisma.mutation.createUser({
+    return await prisma.mutation.createUser({
       data: {
         ...args.data,
         password
