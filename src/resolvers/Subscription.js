@@ -1,26 +1,25 @@
 const Subscription = {
   comment: {
     subscribe(parent, { postId }, { prisma }, info) {
-      return prisma.subscription.comment({
-        where: {
-          node: {
-            post: {
-              id: postId
+      return prisma.subscription.comment(
+        //    A -> 
+        // null,
+        // || B ->
+        {
+          where: {
+            node: {
+              post: {
+                id: postId
+              }
             }
           }
-        }
-      }, info)
+        },
+        info)
     }
   },
   post: {
     subscribe(parent, args, { prisma }, info) {
-      return prisma.subscription.post({
-        where: {
-          node: {
-            published: true
-          }
-        }
-      }, info)
+      return prisma.subscription.post({ where: { node: { published: true } } }, info)
     }
   }
 }

@@ -1,7 +1,6 @@
 const Query = {
   users(parent, args, { prisma }, info) {
     const opArgs = {}
-
     if (args.query) {
       opArgs.where = {
         OR: [{

@@ -15,7 +15,7 @@ services:
             connector: postgres
             host: ec2-174-129-18-42.compute-1.amazonaws.com
             database: d1e2ndnclrinog
-            schema: prisma
+            schema: prismaProject
             user: ssxdkdbqcbmjmv
             password: 5c0ffa0debaf03fcfd44cfd7cc3a91fb080981196a44177b509a29ea3838b7a6
             ssl: true
