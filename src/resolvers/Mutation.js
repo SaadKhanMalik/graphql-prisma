@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import getUserID from "../utils/getUserID"
+import generateToken from "../utils/generateToken"
 
 const Mutation = {
   // 
@@ -19,9 +19,10 @@ const Mutation = {
     if (!isMatch) {
       throw new Error('Unable to login')
     }
+
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "popsicle")
+      token: generateToken(user.id)
     }
   },
   // 
@@ -38,9 +39,10 @@ const Mutation = {
         password
       }
     })
+
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "popsicle")
+      token: generateToken(user.id)
     }
   },
   async updateUser(parent, args, { prisma, request }, info) {
@@ -87,9 +89,25 @@ const Mutation = {
       }
     })
 
+    const postPublished = await prisma.exists.Post({
+      id: args.id,
+      published: true
+    })
+
+
 
     if (!postExists) {
       throw new Error('Unable to update post')
+    }
+
+    if (postPublished && args.data.published === false) {
+      await prisma.mutation.deleteManyComments({
+        where: {
+          post: {
+            id: args.id
+          }
+        }
+      }, info)
     }
 
     return prisma.mutation.updatePost({
@@ -118,12 +136,17 @@ const Mutation = {
       }
     }, info)
   },
-
   // 
   // Comment 
   // 
   async createComment(parent, args, { prisma, request }, info) {
     const userId = getUserID(request)
+
+    const postExists = await prisma.exists.Post({ id: args.data.post, published: true })
+
+    if (!postExists) {
+      throw new Error("Unable to add comment")
+    }
 
     return prisma.mutation.createComment({
       data: {
@@ -150,11 +173,9 @@ const Mutation = {
         id: userId
       }
     })
-
     if (!commentExists) {
       throw new Error('Unable to delet comment')
     }
-
     return prisma.mutation.updateComment({
       where: {
         id: userId
@@ -164,7 +185,6 @@ const Mutation = {
   },
   async deleteComment(parent, args, { prisma, request }, info) {
     const userId = getUserID(request)
-
     const commentExists = await prisma.exists.Comment({
       id: args.id,
       author: {

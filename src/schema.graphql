@@ -1,6 +1,6 @@
 type Query {
-    users(query: String): [User!]!
-    posts(query: String): [Post!]!
+    users(query: String, skip: Int, first: Int, after: String): [User!]!
+    posts(query: String, skip: Int, first: Int, after: String): [Post!]!
     comments: [Comment!]!
     me: User!
     post(id: ID!): Post!
@@ -19,16 +19,6 @@ type Mutation {
     deleteComment(id: ID!): Comment!
     updateComment(id: ID!, data: UpdateCommentInput!): Comment!
 
-}
-
-type Subscription {
-    comment(postId: ID!): CommentSubscriptionPayload!
-    post: PostSubscriptionPayload!
-}
-
-type AuthPayload{
-  token: String!
-  user: User!
 }
 
 input LoginUserInput {
@@ -70,10 +60,20 @@ input UpdateCommentInput {
     text: String
 }
 
+type Subscription {
+    comment(postId: ID!): CommentSubscriptionPayload!
+    post: PostSubscriptionPayload!
+}
+
+type AuthPayload{
+  token: String!
+  user: User!
+}
+
 type User {
     id: ID!
     name: String!
-    email: String!
+    email: String
     password: String!
     posts: [Post!]!
     comments: [Comment!]!
